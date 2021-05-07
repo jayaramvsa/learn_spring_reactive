@@ -83,7 +83,7 @@ public class ItemReactiveRepositoryTest {
     @Test
     public void updateItem() {
         double updatePrice = 199.99;
-        Flux<Item> itemFlux = itemReactiveRepository.findByDescription("MI TV")
+        Mono<Item> itemMono = itemReactiveRepository.findByDescription("MI TV")
                 .map(item -> {
                     item.setPrice(updatePrice);
                     return item;
@@ -92,9 +92,48 @@ public class ItemReactiveRepositoryTest {
                     return itemReactiveRepository.save(item);
                 });
 
-        StepVerifier.create(itemFlux.log("Updated Item :"))
+        StepVerifier.create(itemMono.log("Updated Item :"))
                 .expectSubscription()
                 .expectNextMatches(item -> item.getPrice() == 199.99)
+                .verifyComplete()
+        ;
+    }
+
+    @Test
+    public void deleteItemById() {
+        Mono<Void> voidMono = itemReactiveRepository.findById("1")
+                .map(Item::getId) //Transform from one type to another type
+                .flatMap(id -> {
+                    return itemReactiveRepository.deleteById(id);
+                });
+
+        StepVerifier.create(voidMono.log("Deleted Item :"))
+                .expectSubscription()
+                .verifyComplete()
+        ;
+
+        StepVerifier.create(itemReactiveRepository.findAll().log("Item List :"))
+                .expectSubscription()
+                .expectNextCount(4)
+                .verifyComplete()
+        ;
+    }
+
+    @Test
+    public void deleteItem() {
+        Mono<Void> voidMono = itemReactiveRepository.findByDescription("VIDEOCON TV")
+                .flatMap(item -> {
+                    return itemReactiveRepository.delete(item);
+                });
+
+        StepVerifier.create(voidMono.log("Deleted Item :"))
+                .expectSubscription()
+                .verifyComplete()
+        ;
+
+        StepVerifier.create(itemReactiveRepository.findAll().log("Item List :"))
+                .expectSubscription()
+                .expectNextCount(4)
                 .verifyComplete()
         ;
     }
