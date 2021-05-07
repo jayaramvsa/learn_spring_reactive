@@ -17,6 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
@@ -109,6 +110,33 @@ public class ItemControllerTest {
         webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"), "10")
                 .exchange()
                 .expectStatus().isNotFound()
+        ;
+    }
+
+    @Test
+    public void createItem() {
+        Item item = new Item("5", "TOSHIBA TV", 195.99);
+
+        webTestClient.post().uri(ItemConstants.ITEM_END_POINT_V1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(item), Item.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.id").isEqualTo("5")
+                .jsonPath("$.description").isEqualTo("TOSHIBA TV")
+                .jsonPath("$.price").isEqualTo(195.99)
+        ;
+
+    }
+
+    @Test
+    public void deleteItem() {
+        webTestClient.delete().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"), 1)
+                .accept(MediaType.APPLICATION_JSON)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Void.class)
         ;
     }
 }
