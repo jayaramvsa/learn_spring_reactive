@@ -93,4 +93,22 @@ public class ItemControllerTest {
                 .verifyComplete()
         ;
     }
+
+    @Test
+    public void getSingleItem() {
+        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"), "1")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.price", 400.0)
+        ;
+    }
+
+    @Test
+    public void getSingleItemNotFound() {
+        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"), "10")
+                .exchange()
+                .expectStatus().isNotFound()
+        ;
+    }
 }
