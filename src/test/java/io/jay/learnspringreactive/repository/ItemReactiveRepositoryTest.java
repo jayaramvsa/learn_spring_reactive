@@ -57,4 +57,14 @@ public class ItemReactiveRepositoryTest {
                 .verifyComplete()
         ;
     }
+
+    @Test
+    public void findItemByDescription() {
+
+        StepVerifier.create(itemReactiveRepository.findByDescription("MI TV").log("findItemByDescription : "))
+                .expectSubscription()
+                .expectNextCount(1)
+                .verifyComplete()
+        ;
+    }
 }
