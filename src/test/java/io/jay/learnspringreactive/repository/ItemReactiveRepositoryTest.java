@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Arrays;
@@ -66,5 +67,18 @@ public class ItemReactiveRepositoryTest {
                 .expectNextCount(1)
                 .verifyComplete()
         ;
+    }
+
+    @Test
+    public void saveItem() {
+        Item item = new Item(null, "VU TV", 345.0);
+        Mono<Item> savedItemMono = itemReactiveRepository.save(item);
+        StepVerifier.create(savedItemMono.log("savedItem :"))
+                .expectSubscription()
+                .expectNextMatches(item1 -> item1.getId() != null && item1.getDescription().equals("VU TV"))
+                .verifyComplete()
+        ;
+
+
     }
 }
