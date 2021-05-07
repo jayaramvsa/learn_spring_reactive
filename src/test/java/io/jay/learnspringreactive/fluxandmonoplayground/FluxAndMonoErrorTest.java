@@ -3,6 +3,7 @@ package io.jay.learnspringreactive.fluxandmonoplayground;
 import org.junit.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
+import reactor.util.retry.Retry;
 
 import java.time.Duration;
 
@@ -87,28 +88,29 @@ public class FluxAndMonoErrorTest {
                 .verify()
         ;
     }
-/**
- * <P>RetryBackOff not available it is depreacted and instead use retryWhen </P>
- */
 
-  /*  @Test
+    /**
+     * <P>RetryBackOff not available it is depreacted and instead use retryWhen </P>
+     */
+
+    @Test
     public void errorHandlingOnErrorMaWithRetryBackOff() {
         Flux<String> stringFlux = Flux.just("A", "B", "C")
                 .concatWith(Flux.error(new RuntimeException("Exception occurred")))
                 .concatWith(Flux.just("D"))
                 .onErrorMap((exception) -> new CustomException(exception))
-                .retryBackoff(2,Duration.of(5));
-                ;
+                .retryWhen(Retry.backoff(2, Duration.ofSeconds(5)));
+        ;
 
         StepVerifier.create(stringFlux.log())
                 .expectSubscription()
                 .expectNext("A", "B", "C")
                 .expectNext("A", "B", "C")
                 .expectNext("A", "B", "C")
-                .expectError(CustomException.class)
+                .expectError(IllegalStateException.class)
                 .verify()
         ;
-    }*/
+    }
 
 
 }
