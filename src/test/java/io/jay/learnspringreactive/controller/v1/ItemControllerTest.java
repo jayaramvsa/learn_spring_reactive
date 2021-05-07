@@ -96,7 +96,7 @@ public class ItemControllerTest {
 
     @Test
     public void getSingleItem() {
-        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"), "1")
+        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"), "1")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -106,7 +106,7 @@ public class ItemControllerTest {
 
     @Test
     public void getSingleItemNotFound() {
-        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"), "10")
+        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"), "10")
                 .exchange()
                 .expectStatus().isNotFound()
         ;
@@ -131,7 +131,7 @@ public class ItemControllerTest {
 
     @Test
     public void deleteItem() {
-        webTestClient.delete().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"), 1)
+        webTestClient.delete().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"), 1)
                 .accept(MediaType.APPLICATION_JSON)
                 .exchange()
                 .expectStatus().isOk()
@@ -144,7 +144,7 @@ public class ItemControllerTest {
         double newPrice = 100.00;
         Item item = new Item("2", "MI TV", 300.0);
 
-        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"),2)
+        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"),2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item),Item.class)
@@ -159,7 +159,7 @@ public class ItemControllerTest {
         double newPrice = 100.00;
         Item item = new Item("2", "MI TV", 300.0);
 
-        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("{id}"),100)
+        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"),100)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .body(Mono.just(item),Item.class)

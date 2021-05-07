@@ -23,7 +23,7 @@ public class ItemController {
         return itemReactiveRepository.findAll();
     }
 
-    @GetMapping(value = ItemConstants.ITEM_END_POINT_V1 + "{id}")
+    @GetMapping(value = ItemConstants.ITEM_END_POINT_V1 + "/{id}")
     public Mono<ResponseEntity<Item>> getSingleItem(@PathVariable String id) {
         return itemReactiveRepository.findById(id)
                 .map(item -> new ResponseEntity<>(item, HttpStatus.OK))
@@ -37,13 +37,13 @@ public class ItemController {
         return itemReactiveRepository.save(item);
     }
 
-    @DeleteMapping(value = ItemConstants.ITEM_END_POINT_V1 + "{id}")
+    @DeleteMapping(value = ItemConstants.ITEM_END_POINT_V1 + "/{id}")
     public Mono<Void> deleteItem(@PathVariable String id) {
         return itemReactiveRepository.deleteById(id);
 
     }
 
-    @PutMapping(value = ItemConstants.ITEM_END_POINT_V1 + "{id}")
+    @PutMapping(value = ItemConstants.ITEM_END_POINT_V1 + "/{id}")
     public Mono<ResponseEntity<Item>> updateItem(@PathVariable String id,
                                                  @RequestBody Item item) {
 
