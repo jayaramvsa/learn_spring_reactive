@@ -3,6 +3,7 @@ package io.jay.learnspringreactive.handler;
 import io.jay.learnspringreactive.document.Item;
 import io.jay.learnspringreactive.repository.ItemReactiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -35,5 +36,13 @@ public class ItemHandler {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(fromValue(item)))
                 .switchIfEmpty(notFoundServerResponseMono);
+    }
+
+    public Mono<ServerResponse> createItem(ServerRequest serverRequest) {
+        Mono<Item> itemMono = serverRequest.bodyToMono(Item.class);
+        return itemMono.flatMap(item ->
+                ServerResponse.status(HttpStatus.CREATED)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(itemReactiveRepository.save(item), Item.class));
     }
 }
