@@ -138,4 +138,32 @@ public class ItemHandlerTest {
         ;
     }
 
+    @Test
+    public void updateItem(){
+        double newPrice = 100.00;
+        Item item = new Item("2", "MI TV", 300.0);
+
+        webTestClient.put().uri(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1.concat("/{id}"),2)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(item),Item.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.price",newPrice);
+    }
+
+    @Test
+    public void updateItemNotFound(){
+        double newPrice = 100.00;
+        Item item = new Item("2", "MI TV", 300.0);
+
+        webTestClient.put().uri(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1.concat("/{id}"),100)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .body(Mono.just(item),Item.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
 }
