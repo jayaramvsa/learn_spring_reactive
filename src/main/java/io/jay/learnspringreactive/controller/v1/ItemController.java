@@ -15,12 +15,12 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class ItemController {
 
-    //Handling exception using ExceptionHandler
-    @ExceptionHandler(RuntimeException.class)
+    //Handling exception using Exception
+/*    @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException(RuntimeException runtimeException) {
         log.error("Exception Caught in handle Runtime Exception : {}", runtimeException);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(runtimeException.getMessage());
-    }
+    }*/
 
     @Autowired
     ItemReactiveRepository itemReactiveRepository;
