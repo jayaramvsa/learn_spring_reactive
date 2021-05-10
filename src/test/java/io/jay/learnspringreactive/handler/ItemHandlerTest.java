@@ -111,6 +111,7 @@ public class ItemHandlerTest {
                 .expectStatus().isNotFound()
         ;
     }
+
     @Test
     public void createItem() {
         Item item = new Item("5", "TOSHIBA TV", 195.99);
@@ -139,31 +140,40 @@ public class ItemHandlerTest {
     }
 
     @Test
-    public void updateItem(){
+    public void updateItem() {
         double newPrice = 100.00;
         Item item = new Item("2", "MI TV", 300.0);
 
-        webTestClient.put().uri(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1.concat("/{id}"),2)
+        webTestClient.put().uri(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1.concat("/{id}"), 2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(item),Item.class)
+                .body(Mono.just(item), Item.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.price",newPrice);
+                .jsonPath("$.price", newPrice);
     }
 
     @Test
-    public void updateItemNotFound(){
+    public void updateItemNotFound() {
         double newPrice = 100.00;
         Item item = new Item("2", "MI TV", 300.0);
 
-        webTestClient.put().uri(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1.concat("/{id}"),100)
+        webTestClient.put().uri(ItemConstants.ITEM_FUNCTIONAL_END_POINT_V1.concat("/{id}"), 100)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(item),Item.class)
+                .body(Mono.just(item), Item.class)
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+    @Test
+    public void runTimeException() {
+        webTestClient.get().uri("/fun/runtimeException")
+                .exchange()
+                .expectStatus().is5xxServerError()
+                .expectBody()
+                .jsonPath("$.error","Internal Server Error");
     }
 
 }
