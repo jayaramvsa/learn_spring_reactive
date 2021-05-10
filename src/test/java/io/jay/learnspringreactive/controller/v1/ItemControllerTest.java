@@ -140,30 +140,41 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void updateItem(){
+    public void updateItem() {
         double newPrice = 100.00;
         Item item = new Item("2", "MI TV", 300.0);
 
-        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"),2)
+        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"), 2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(item),Item.class)
+                .body(Mono.just(item), Item.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .jsonPath("$.price",newPrice);
+                .jsonPath("$.price", newPrice);
     }
 
     @Test
-    public void updateItemNotFound(){
+    public void updateItemNotFound() {
         double newPrice = 100.00;
         Item item = new Item("2", "MI TV", 300.0);
 
-        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"),100)
+        webTestClient.put().uri(ItemConstants.ITEM_END_POINT_V1.concat("/{id}"), 100)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .body(Mono.just(item),Item.class)
+                .body(Mono.just(item), Item.class)
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+    @Test
+    public void runTimeException() {
+
+        webTestClient.get().uri(ItemConstants.ITEM_END_POINT_V1.concat("/runtimeException"))
+                .exchange()
+                .expectStatus().is5xxServerError()
+                .expectBody(String.class)
+                .isEqualTo("RuntimeException Occurred")
+        ;
     }
 }
