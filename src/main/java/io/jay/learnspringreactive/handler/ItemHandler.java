@@ -71,6 +71,10 @@ public class ItemHandler {
                 ServerResponse.ok()
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(fromValue(item)))
-                        .switchIfEmpty(notFoundServerResponseMono);
+                .switchIfEmpty(notFoundServerResponseMono);
+    }
+
+    public Mono<ServerResponse> itemException(ServerRequest serverRequest) {
+        throw new RuntimeException("RuntimeException Occurred");
     }
 }

@@ -29,4 +29,11 @@ public class ItemsRouter {
                 .andRoute(PUT(ITEM_FUNCTIONAL_END_POINT_V1.concat("/{id}"))
                         .and(accept(MediaType.APPLICATION_JSON)), itemHandler::updateItem);
     }
+
+    @Bean
+    public RouterFunction<ServerResponse> errorRoute(ItemHandler itemHandler){
+
+        return RouterFunctions.route(GET("/fun/runtimeException").
+                and(accept(MediaType.APPLICATION_JSON)), itemHandler::itemException);
+    }
 }
